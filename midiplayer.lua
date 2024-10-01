@@ -119,13 +119,15 @@ function to_pattern(msg, ...)
   end
 end
 
-function convert_to_reflection(filename, i)
-  if filename ~= default_path then
+function convert_to_reflection(filename)
+  if filename ~= "cancel" and filename ~= "" and filename ~= default_path then
     -- clear temp pattern
     p.count = 0
     p.step = 1
     p.event = {}
     p.endpoint = 0
+    -- set file id
+    midi_file_id = filename:match("[^/]*$")
     -- read midi and convert
     is_converting = true
     local file = assert(io.open(filename, "rb"))
@@ -144,9 +146,7 @@ function copy_to_pattern()
 end
 
 function set_midi_file(filename)
-  if filename ~= "cancel" and filename ~= "" and filename ~= default_path then
-    params:set("midi_filepath", filename)
-  end
+  convert_to_reflection(filename, 1)
   screenredrawtimer:start()
   dirtyscreen = true
 end
@@ -161,16 +161,6 @@ function init()
   end
   
   -- params
-  params:add_separator("midiplayer_params", "midiplayer")
-  params:add_file("midi_filepath", "midi file", default_path)
-  params:set_action("midi_filepath", function(filename) convert_to_reflection(filename, 1) midi_file_id = filename:match("[^/]*$") end)
-
-  params:add_binary("play_midi", "play", "trigger")
-  params:set_action("play_midi", function() pattern:start() end)
-
-  params:add_binary("stop_midi", "stop", "trigger")
-  params:set_action("stop_midi", function() pattern:stop()  end)
-
   params:add_separator("nb_voice", "nb")
   nb:add_param("nb_player", "nb player")
   nb:add_player_params()
@@ -280,4 +270,3 @@ end
 function cleanup()
   print("all nice and tidy here")
 end
-
