@@ -1,5 +1,5 @@
 -- midiplayer v0.1.0 @sonocircuit
--- llllllll.co/t/url
+-- llllllll.co/t/midiplayer/68868
 --
 --
 --        - play ur midi -
